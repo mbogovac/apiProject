@@ -13,9 +13,9 @@ namespace RestSharpDemo
     {
         private RestClient client;
         private RestRequest request;
-        private const string baseUrl = "https://reqres.in/";
+        
 
-        public RestClient SetUrl(string endpoint)
+        public RestClient SetUrl(string baseUrl, string endpoint)
         {
             var url = Path.Combine(baseUrl, endpoint);
             client = new RestClient(url);
@@ -50,10 +50,29 @@ namespace RestSharpDemo
             return restClient.Execute(restRequest);
         }
 
-        public T GetContent<T>(RestResponse response)
+        public RestRequest CreatePutRequest(string payload)
         {
-            var content = response.Content;
-            return JsonConvert.DeserializeObject<T>(content);
+            request = new RestRequest()
+            {
+                Method = Method.Put
+            };
+
+            request.AddHeader("Accept", "application/json");
+            request.AddParameter("application/json", payload, ParameterType.RequestBody);
+
+            return request;
         }
+
+        public RestRequest CreateDeleteRequest()
+        {
+            request = new RestRequest()
+            {
+                Method = Method.Delete
+            };
+
+            request.AddHeader("Accept", "application/json");
+            return request;
+        }
+
     }
 }

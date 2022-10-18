@@ -20,25 +20,27 @@ namespace RestSharpDemo
             helper = new Helper();
         }
 
-        public Users GetUsers()
+        public RestResponse GetUsers(string baseUrl)
         {
-            var client = helper.SetUrl("api/users?page=2");
+            var client = helper.SetUrl(baseUrl,"api/users?page=2");
             var request = helper.CreateGetRequest();
             request.RequestFormat = DataFormat.Json;
             var response = helper.GetResponse(client, request);
-            var users = helper.GetContent<Users>(response);
+            //var users = HandleContent.GetContent<Users>(response);
 
-            return users;
+            return response;
         }
 
-        public CreateUserRes CreateNewUser(string payload)
+        public RestResponse CreateNewUser(string baseUrl,dynamic payload)
         {
-            var client = helper.SetUrl("api/users");
-            var request = helper.CreatePostRequest(payload);
-            var response = helper.GetResponse(client, request);
-            var createUser = helper.GetContent<CreateUserRes>(response);
+            var client = helper.SetUrl(baseUrl, "api/users");
+            var jsonString = HandleContent.SerializeJsonString(payload);
 
-            return createUser;
+            var request = helper.CreatePostRequest(jsonString);
+            var response = helper.GetResponse(client, request);
+            //var createUser = HandleContent.GetContent<CreateUserRes>(response);
+
+            return response;
         }
     }
 }
